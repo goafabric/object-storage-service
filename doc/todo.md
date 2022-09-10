@@ -1,3 +1,2 @@
 - unit test
-- s3 auto configuration + profile handling
-- bucket variable + creation
+- filename + uuid

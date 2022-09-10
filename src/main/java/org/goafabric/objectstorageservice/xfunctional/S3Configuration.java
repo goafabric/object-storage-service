@@ -20,8 +20,10 @@ public class S3Configuration {
             @Value("${cloud.aws.s3.pathstyle.enabled}") Boolean pathStyleAccessEnabled,
             @Value("${cloud.aws.credentials.access-key}") String accesKey,
             @Value("${cloud.aws.credentials.secret-key}") String secretKey,
-            @Value("${cloud.aws.region.static:null}") String region) {
-        return AmazonS3ClientBuilder
+
+            @Value("${cloud.aws.region.static:null}") String region,
+            @Value("${cloud.aws.s3.bucket.name}") String bucketName) {
+        final AmazonS3 amazonS3 = AmazonS3ClientBuilder
                 .standard()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(
                         serviceEndpoint, region))
@@ -29,5 +31,11 @@ public class S3Configuration {
                 .withCredentials(new AWSStaticCredentialsProvider(
                         new BasicAWSCredentials(accesKey, secretKey)))
                 .build();
+
+        if (!amazonS3.doesBucketExistV2(bucketName)) {
+            amazonS3.createBucket(bucketName);
+            amazonS3.putObject(bucketName, "hello_world.txt", "hello world");
+        }
+        return amazonS3;
     }
 }
