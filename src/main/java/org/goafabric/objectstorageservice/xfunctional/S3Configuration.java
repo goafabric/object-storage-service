@@ -19,11 +19,12 @@ public class S3Configuration {
             @Value("${cloud.aws.s3.endpoint}") String serviceEndpoint,
             @Value("${cloud.aws.s3.pathstyle.enabled}") Boolean pathStyleAccessEnabled,
             @Value("${cloud.aws.credentials.access-key}") String accesKey,
-            @Value("${cloud.aws.credentials.secret-key}") String secretKey) {
+            @Value("${cloud.aws.credentials.secret-key}") String secretKey,
+            @Value("${cloud.aws.region.static:null}") String region) {
         return AmazonS3ClientBuilder
                 .standard()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(
-                        serviceEndpoint, null)) 
+                        serviceEndpoint, region))
                 .withPathStyleAccessEnabled(pathStyleAccessEnabled)
                 .withCredentials(new AWSStaticCredentialsProvider(
                         new BasicAWSCredentials(accesKey, secretKey)))
