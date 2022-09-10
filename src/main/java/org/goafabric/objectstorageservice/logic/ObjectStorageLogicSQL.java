@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@Component
 @Profile("sql")
+@Component
 public class ObjectStorageLogicSQL implements ObjectStorageLogic {
     @Autowired
     ObjectStorageRepository objectStorageRepository;
