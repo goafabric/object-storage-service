@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectEntryBo;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectMetaData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,8 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
     @Autowired
     private AmazonS3 s3Client;
 
-    private static final String BUCKET_NAME = "test";
+    @Value("${cloud.aws.s3.bucket.name}")
+    private String BUCKET_NAME;
 
     @Override
     @SneakyThrows

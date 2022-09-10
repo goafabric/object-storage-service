@@ -58,9 +58,9 @@ cloud.aws.s3.endpoint: "http://localhost:9100"
 cloud.aws.s3.pathstyle.enabled: "true"
 cloud.aws.credentials.access-key: "minioadmin"
 cloud.aws.credentials.secret-key: "minioadmin"
-
 #cloud.aws.region.static: "eu-central-1"
 
+cloud.aws.s3.bucket.name: "test"
 
 #logging.pattern.console: "%white(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable"
 
