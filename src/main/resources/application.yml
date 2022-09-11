@@ -51,7 +51,7 @@ logging.level.org.flywaydb.core: "INFO"
 logging.level.org.hibernate.SQL: "DEBUG"
 
 #Profile can be either s3 or sql
-spring.profiles.active: "s3-object-storage"
+spring.profiles.active: "sql-object-storage"
 
 #Amazon S3 configuration, optional with profile sql
 cloud.aws.s3.bucket.name: "objects"
