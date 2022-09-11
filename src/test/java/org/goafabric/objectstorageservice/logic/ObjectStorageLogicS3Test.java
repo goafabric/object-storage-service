@@ -44,6 +44,7 @@ class ObjectStorageLogicS3Test {
 
         final ObjectEntryBo objectEntry = objectStorageLogic.getObject("1");
         assertThat(objectEntry).isNotNull();
+        assertThat(objectEntry.getId()).isNotNull();
     }
 
     @Test
@@ -93,6 +94,14 @@ class ObjectStorageLogicS3Test {
 
         assertThat(ObjectStorageLogicS3.getKeyName(objectEntry)).isEqualTo(objectEntry.getId());
     }
+
+    /*
+    @Test
+    void createS3Configuration() {
+        assertThat(new S3Configuration().amazonS3("http://localhost:0", Boolean.TRUE, "", "", "", "test")).isNotNull();
+    }
+
+     */
 
     private ObjectEntryBo createObjectEntry() {
         byte[] data = new byte[0];
