@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
-
 @Profile("sql-object-storage")
 @Component
 public class ObjectStorageLogicSQL implements ObjectStorageLogic {
@@ -37,9 +35,5 @@ public class ObjectStorageLogicSQL implements ObjectStorageLogic {
 
     public void deleteObject(@NonNull final String fileid) {
         objectStorageRepository.deleteById(fileid);
-    }
-
-    public List<ObjectEntryBo> findAll() {
-        return objectStorageRepository.findAll();
     }
 }
