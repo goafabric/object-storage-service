@@ -28,7 +28,7 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
 
     @Override
     @SneakyThrows
-    public String persistObject(ObjectEntryBo objectEntry) {
+    public String persistObject(@NonNull ObjectEntryBo objectEntry) {
         s3Client.putObject(BUCKET_NAME,
                 getKeyName(objectEntry),
                 new ByteArrayInputStream(objectEntry.getData()),
@@ -38,7 +38,7 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
 
     @Override
     @SneakyThrows
-    public ObjectEntryBo getObject(String objectId) {
+    public ObjectEntryBo getObject(@NonNull String objectId) {
         final S3Object s3Object = s3Client.getObject(BUCKET_NAME, objectId);
         return map(objectId,
                 s3Object.getObjectContent().readAllBytes(),
@@ -46,7 +46,7 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
     }
 
     @Override
-    public ObjectMetaData getObjectMetaData(String objectId) {
+    public ObjectMetaData getObjectMetaData(@NonNull String objectId) {
         return map(s3Client.getObject(BUCKET_NAME, objectId));
     }
 
