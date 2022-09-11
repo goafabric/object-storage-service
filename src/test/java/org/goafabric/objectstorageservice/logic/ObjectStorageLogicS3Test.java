@@ -75,6 +75,8 @@ class ObjectStorageLogicS3Test {
     void getKeyName() {
         final String keyName = ObjectStorageLogicS3.getKeyName(createObjectEntry());
         assertThat(keyName).startsWith("lorem_ipsum");
+
+
     }
 
 
