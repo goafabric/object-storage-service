@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Profile("s3")
+@Profile("s3-object-storage")
 @Component
 public class ObjectStorageLogicS3 implements ObjectStorageLogic {
     @Autowired
@@ -28,31 +28,31 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
 
     @Override
     @SneakyThrows
-    public String persistObject(ObjectEntryBo fileEntry) {
+    public String persistObject(ObjectEntryBo objectEntry) {
         s3Client.putObject(BUCKET_NAME,
-                getKeyName(fileEntry.getId()),
-                new ByteArrayInputStream(fileEntry.getData()),
-                map(fileEntry));
-        return fileEntry.getId();
+                getKeyName(objectEntry),
+                new ByteArrayInputStream(objectEntry.getData()),
+                map(objectEntry));
+        return getKeyName(objectEntry);
     }
 
     @Override
     @SneakyThrows
     public ObjectEntryBo getObject(String objectId) {
-        final S3Object s3Object = s3Client.getObject(BUCKET_NAME, getKeyName(objectId));
-        return map(getKeyName(objectId),
+        final S3Object s3Object = s3Client.getObject(BUCKET_NAME, objectId);
+        return map(objectId,
                 s3Object.getObjectContent().readAllBytes(),
                 map(s3Object));
     }
 
     @Override
     public ObjectMetaData getObjectMetaData(String objectId) {
-        return map(s3Client.getObject(BUCKET_NAME, getKeyName(objectId)));
+        return map(s3Client.getObject(BUCKET_NAME, objectId));
     }
 
     @Override
     public void deleteObject(@NonNull String objectId) {
-        s3Client.deleteObject(BUCKET_NAME, getKeyName(objectId));
+        s3Client.deleteObject(BUCKET_NAME, objectId);
     }
 
     @Override
@@ -89,8 +89,10 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
         return objectMetadata;
     }
 
-    private static String getKeyName(String objectId) {
-        return objectId + ".pdf";
+    private static String getKeyName(ObjectEntryBo objectEntry) {
+        final String[] fix = objectEntry.getObjectName().split("\\.");
+        return fix.length == 2 ? (fix[0] + "_" + objectEntry.getId() + "." + fix[1]) : objectEntry.getId();
+
     }
 
 }

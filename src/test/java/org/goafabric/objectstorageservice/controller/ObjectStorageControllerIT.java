@@ -60,5 +60,4 @@ class ObjectStorageControllerIT {
 
         //fileStorageController.deleteFile(id);
     }
-    
 }

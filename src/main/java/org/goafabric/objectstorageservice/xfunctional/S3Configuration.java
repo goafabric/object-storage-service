@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile("s3")
+@Profile("s3-object-storage")
 public class S3Configuration {
 
     @Bean
