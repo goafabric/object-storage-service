@@ -72,13 +72,20 @@ class ObjectStorageLogicS3Test {
     }
 
     @Test
-    void getKeyName() {
-        final String keyName = ObjectStorageLogicS3.getKeyName(createObjectEntry());
-        assertThat(keyName).startsWith("lorem_ipsum");
-
-
+    void getKeyNameWithExt() {
+        ObjectEntryBo objectEntry = createObjectEntry();
+        assertThat(ObjectStorageLogicS3.getKeyName(objectEntry))
+            .startsWith("lorem_ipsum");
     }
 
+
+    @Test
+    void getKeyNameWithOutExt() {
+        ObjectEntryBo objectEntry = createObjectEntry();
+        objectEntry.setObjectName("anotherfile_without_extension");
+
+        assertThat(ObjectStorageLogicS3.getKeyName(objectEntry)).isEqualTo(objectEntry.getId());
+    }
 
     private ObjectEntryBo createObjectEntry() {
         byte[] data = new byte[0];
