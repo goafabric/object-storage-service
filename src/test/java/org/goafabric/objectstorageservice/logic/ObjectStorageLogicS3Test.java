@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,7 +31,8 @@ class ObjectStorageLogicS3Test {
 
     @Test
     void persistObject() {
-        assertThat(objectStorageLogic.persistObject(createObjectEntry())).isNotNull();
+        String id = objectStorageLogic.persistObject(createObjectEntry());
+        assertThat(id).isNotNull();
     }
 
     @Test
@@ -39,7 +42,8 @@ class ObjectStorageLogicS3Test {
         when(s3Client.getObject(anyString(), anyString())).thenReturn(s3Object);
         objectStorageLogic.bucketName = "test";
 
-        assertThat(objectStorageLogic.getObject("1")).isNotNull();
+        final ObjectEntryBo objectEntry = objectStorageLogic.getObject("1");
+        assertThat(objectEntry).isNotNull();
     }
 
     @Test
@@ -47,12 +51,15 @@ class ObjectStorageLogicS3Test {
         when(s3Client.getObject(anyString(), anyString())).thenReturn(new S3Object());
         objectStorageLogic.bucketName = "test";
 
-        assertThat(objectStorageLogic.getObjectMetaData("1")).isNotNull();
+        ObjectMetaData objectMetaData = objectStorageLogic.getObjectMetaData("1");
+        assertThat(objectMetaData).isNotNull();
     }
 
     @Test
     void deleteObject() {
+        objectStorageLogic.bucketName = "test";
         objectStorageLogic.deleteObject("1");
+        Mockito.verify(s3Client, times(1)).deleteObject(anyString(), anyString());
     }
     
 
