@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 @Profile("s3-object-storage")
 @Component
@@ -22,7 +21,7 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
     private AmazonS3 s3Client;
 
     @Value("${cloud.aws.s3.bucket.name}")
-    private String bucketName;
+    String bucketName;
 
     @Override
     @SneakyThrows
@@ -53,7 +52,7 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
         s3Client.deleteObject(bucketName, objectId);
     }
 
-    static ObjectEntryBo map(@NonNull String keyName, byte[] data, @NonNull ObjectMetaData objectMetaDataProjection) throws IOException {
+    static ObjectEntryBo map(@NonNull String keyName, byte[] data, @NonNull ObjectMetaData objectMetaDataProjection)  {
         return ObjectEntryBo.builder()
                 .id(keyName)
                 .data(data)
