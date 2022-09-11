@@ -61,7 +61,7 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
     }
 
 
-    private static ObjectEntryBo map(String keyName, byte[] data, ObjectMetaData objectMetaDataProjection) throws IOException {
+    private static ObjectEntryBo map(@NonNull String keyName, byte[] data, @NonNull ObjectMetaData objectMetaDataProjection) throws IOException {
         return ObjectEntryBo.builder()
                 .id(keyName)
                 .data(data)
@@ -71,7 +71,7 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
                 .build();
     }
 
-    private static ObjectMetaData map(S3Object s3Object) {
+    private static ObjectMetaData map(@NonNull S3Object s3Object) {
         final ObjectMetadata metadata = s3Object.getObjectMetadata();
 
         return new ObjectMetaData(
@@ -81,7 +81,7 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
                 metadata.getContentLength());
     }
 
-    private static ObjectMetadata map(ObjectEntryBo fileEntry) {
+    private static ObjectMetadata map(@NonNull ObjectEntryBo fileEntry) {
         final ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(fileEntry.getData().length);
         objectMetadata.setContentType(fileEntry.getContentType());
@@ -89,10 +89,9 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
         return objectMetadata;
     }
 
-    private static String getKeyName(ObjectEntryBo objectEntry) {
+    private static String getKeyName(@NonNull ObjectEntryBo objectEntry) {
         final String[] fix = objectEntry.getObjectName().split("\\.");
         return fix.length == 2 ? (fix[0] + "_" + objectEntry.getId() + "." + fix[1]) : objectEntry.getId();
-
     }
 
 }
