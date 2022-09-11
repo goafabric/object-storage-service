@@ -1,2 +1,2 @@
 - unit test
-- filename + uuid
+- compose file + helm chart
