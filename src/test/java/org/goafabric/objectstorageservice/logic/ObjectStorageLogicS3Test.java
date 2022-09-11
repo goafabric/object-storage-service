@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectEntryBo;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectMetaData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,6 +27,7 @@ class ObjectStorageLogicS3Test {
     @Mock
     private AmazonS3 s3Client;
 
+
     @InjectMocks
     private ObjectStorageLogicS3 objectStorageLogic = new ObjectStorageLogicS3();
 
@@ -35,12 +37,18 @@ class ObjectStorageLogicS3Test {
         assertThat(id).isNotNull();
     }
 
+    @BeforeEach
+    void setUp() {
+        objectStorageLogic.bucketName = "test";
+        objectStorageLogic.anonymousFilesEnabled = false;
+    }
+
     @Test
     void getObject() {
         final S3Object s3Object = new S3Object();
         s3Object.setObjectContent(new ByteArrayInputStream(new byte[0]));
         when(s3Client.getObject(anyString(), anyString())).thenReturn(s3Object);
-        objectStorageLogic.bucketName = "test";
+
 
         final ObjectEntryBo objectEntry = objectStorageLogic.getObject("1");
         assertThat(objectEntry).isNotNull();
@@ -50,7 +58,6 @@ class ObjectStorageLogicS3Test {
     @Test
     void getObjectMetaData() {
         when(s3Client.getObject(anyString(), anyString())).thenReturn(new S3Object());
-        objectStorageLogic.bucketName = "test";
 
         ObjectMetaData objectMetaData = objectStorageLogic.getObjectMetaData("1");
         assertThat(objectMetaData).isNotNull();
@@ -58,7 +65,6 @@ class ObjectStorageLogicS3Test {
 
     @Test
     void deleteObject() {
-        objectStorageLogic.bucketName = "test";
         objectStorageLogic.deleteObject("1");
         Mockito.verify(s3Client, times(1)).deleteObject(anyString(), anyString());
     }
@@ -82,8 +88,11 @@ class ObjectStorageLogicS3Test {
     @Test
     void getKeyNameWithExt() {
         ObjectEntryBo objectEntry = createObjectEntry();
-        assertThat(ObjectStorageLogicS3.getKeyName(objectEntry))
+        assertThat(ObjectStorageLogicS3.getKeyName(objectEntry, false))
             .startsWith("lorem_ipsum");
+
+        assertThat(ObjectStorageLogicS3.getKeyName(objectEntry, true))
+                .isEqualTo(objectEntry.getId());
     }
 
 
@@ -92,7 +101,7 @@ class ObjectStorageLogicS3Test {
         ObjectEntryBo objectEntry = createObjectEntry();
         objectEntry.setObjectName("anotherfile_without_extension");
 
-        assertThat(ObjectStorageLogicS3.getKeyName(objectEntry)).isEqualTo(objectEntry.getId());
+        assertThat(ObjectStorageLogicS3.getKeyName(objectEntry, false)).isEqualTo(objectEntry.getId());
     }
 
     /*

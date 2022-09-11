@@ -55,9 +55,10 @@ spring.profiles.active: "sql-object-storage"
 
 #Amazon S3 configuration, optional with profile sql
 cloud.aws.s3.bucket.name: "objects"
+cloud.aws.s3.path-style.enabled: "true"
+cloud.aws.s3.anonymous-files.enabled: "false"
 
 cloud.aws.s3.endpoint: "http://localhost:9100"
-cloud.aws.s3.path-style.enabled: "true"
 cloud.aws.credentials.access-key: "minioadmin"
 cloud.aws.credentials.secret-key: "minioadmin"
 

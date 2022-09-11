@@ -23,14 +23,17 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
     @Value("${cloud.aws.s3.bucket.name}")
     String bucketName;
 
+    @Value("${cloud.aws.s3.anonymous-files.enabled}")
+    Boolean anonymousFilesEnabled;
+
     @Override
     @SneakyThrows
     public String persistObject(@NonNull ObjectEntryBo objectEntry) {
         s3Client.putObject(bucketName,
-                getKeyName(objectEntry),
+                getKeyName(objectEntry, anonymousFilesEnabled),
                 new ByteArrayInputStream(objectEntry.getData()),
                 map(objectEntry));
-        return getKeyName(objectEntry);
+        return getKeyName(objectEntry, anonymousFilesEnabled);
     }
 
     @Override
@@ -78,9 +81,11 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
         return objectMetadata;
     }
 
-    static String getKeyName(@NonNull ObjectEntryBo objectEntry) {
+    static String getKeyName(@NonNull ObjectEntryBo objectEntry, Boolean anonymousFilesEnabled) {
         final String[] fix = objectEntry.getObjectName().split("\\.");
-        return fix.length == 2 ? (fix[0] + "_" + objectEntry.getId() + "." + fix[1]) : objectEntry.getId();
+        return (fix.length < 2 || anonymousFilesEnabled)
+                        ? objectEntry.getId()
+                        : (fix[0] + "_" + objectEntry.getId() + "." + fix[1]);
     }
 
 }
