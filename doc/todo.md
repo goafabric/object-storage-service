@@ -1,2 +1,2 @@
 - unit test
-- compose file + helm chart
+- helm charts

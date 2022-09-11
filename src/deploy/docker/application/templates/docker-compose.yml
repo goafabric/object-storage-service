@@ -41,6 +41,13 @@ services:
       - spring.datasource.username=object-storage-service
       - spring.datasource.password=object-storage-service
       - database.provisioning.goals=-import-demo-data
+      #s3
+      - spring.profiles.active=s3-object-storage
+      - cloud.aws.s3.bucket.name=objects
+      - cloud.aws.s3.endpoint=http://host.docker.internal:9100
+      - cloud.aws.s3.path-style.enabled=true
+      - cloud.aws.credentials.access-key=minioadmin
+      - cloud.aws.credentials.secret-key=minioadmin
       #log levels
       - logging.level.root=WARN
       - logging.level.org.springframework=INFO
