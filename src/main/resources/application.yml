@@ -57,7 +57,7 @@ spring.profiles.active: "sql-object-storage"
 cloud.aws.s3.bucket.name: "test"
 
 cloud.aws.s3.endpoint: "http://localhost:9100"
-cloud.aws.s3.pathstyle.enabled: "true"
+cloud.aws.s3.path-style.enabled: "true"
 cloud.aws.credentials.access-key: "minioadmin"
 cloud.aws.credentials.secret-key: "minioadmin"
 

@@ -17,7 +17,7 @@ public class S3Configuration {
     @Bean
     public AmazonS3 amazonS3(
             @Value("${cloud.aws.s3.endpoint}") String serviceEndpoint,
-            @Value("${cloud.aws.s3.pathstyle.enabled}") Boolean pathStyleAccessEnabled,
+            @Value("${cloud.aws.s3.path-style.enabled}") Boolean pathStyleAccessEnabled,
             @Value("${cloud.aws.credentials.access-key}") String accesKey,
             @Value("${cloud.aws.credentials.secret-key}") String secretKey,
 
