@@ -37,15 +37,10 @@ services:
       - spring.sleuth.enabled=true
       - spring.zipkin.enabled=true
       #persistence
-      - spring.datasource.url=jdbc:postgresql://${_Values_root_name}-postgres:5432/objectstorage
+      - spring.datasource.url=jdbc:postgresql://host.docker.internal:5432/objectstorage
       - spring.datasource.username=object-storage-service
       - spring.datasource.password=object-storage-service
       - database.provisioning.goals=-import-demo-data
-      #adapter
-      - adapter.calleeservice.url=http://host.docker.internal:50900
-      - adapter.calleeservice.user=YWRtaW4=
-      - adapter.calleeservice.password=YWRtaW4=
-      - adapter.timeout=10000
       #log levels
       - logging.level.root=WARN
       - logging.level.org.springframework=INFO
@@ -57,31 +52,10 @@ services:
       - logging.file.max-size=10MB
       - logging.file.name=/usr/share/logs/application.log
 
-    depends_on:
-      - postgres
-
-  postgres:
-    container_name: ${_Values_root_name}-postgres
-    image: postgres:14.4
-    restart: 'no'
-    ports:
-      - 50510:5432
-    environment:
-      - TZ=Europe/Berlin
-      - POSTGRES_USER=object-storage-service
-      - POSTGRES_PASSWORD=object-storage-service
-      - POSTGRES_DB=objectstorage
-    command: postgres -c 'shared_buffers=128MB' -c 'max_connections=30' -c 'shared_preload_libraries=pg_stat_statements'
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-#      - ../config/postgres/initdb/00_pg_statements.sql:/docker-entrypoint-initdb.d/00_pg_statements.sql
-    networks:
-      - ${_Values_root_name}-net
 
 volumes:
     tmp:
     applogs:
-    pgdata:
 
 networks:
   object-storage-service-net:
