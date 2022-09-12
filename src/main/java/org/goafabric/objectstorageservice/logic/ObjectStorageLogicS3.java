@@ -4,10 +4,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectEntryBo;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectMetaData;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -16,15 +16,15 @@ import java.io.ByteArrayInputStream;
 
 @Profile("s3-object-storage")
 @Component
-@RequiredArgsConstructor
 public class ObjectStorageLogicS3 implements ObjectStorageLogic {
-    private final AmazonS3 s3Client;
+    @Autowired
+    AmazonS3 s3Client;
 
     @Value("${cloud.aws.s3.bucket.name}")
-    private final String bucketName;
+    String bucketName;
 
     @Value("${cloud.aws.s3.anonymous-files.enabled}")
-    private final Boolean anonymousFilesEnabled;
+    Boolean anonymousFilesEnabled;
 
     @Override
     @SneakyThrows

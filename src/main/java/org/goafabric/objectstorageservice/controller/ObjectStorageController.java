@@ -1,9 +1,9 @@
 package org.goafabric.objectstorageservice.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.goafabric.objectstorageservice.logic.ObjectStorageLogic;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectEntryBo;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectMetaData;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/objects", produces = MediaType.APPLICATION_JSON_VALUE)
 @Transactional
-@RequiredArgsConstructor
 public class ObjectStorageController {
-    private final ObjectStorageLogic objectStorageLogic;
+    @Autowired
+    ObjectStorageLogic objectStorageLogic;
 
     @GetMapping("/welcome")
     public String welcome() {
