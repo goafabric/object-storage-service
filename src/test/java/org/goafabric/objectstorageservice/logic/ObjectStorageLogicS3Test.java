@@ -4,13 +4,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectEntryBo;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectMetaData;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 
 import java.io.ByteArrayInputStream;
@@ -21,26 +16,17 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 class ObjectStorageLogicS3Test {
 
-    @Mock
-    private AmazonS3 s3Client;
+    private AmazonS3 s3Client =  Mockito.mock(AmazonS3.class);
 
-
-    @InjectMocks
-    private ObjectStorageLogicS3 objectStorageLogic = new ObjectStorageLogicS3();
+    private ObjectStorageLogicS3 objectStorageLogic =
+            new ObjectStorageLogicS3(s3Client, "test", false);
 
     @Test
     void persistObject() {
         String id = objectStorageLogic.persistObject(createObjectEntry());
         assertThat(id).isNotNull();
-    }
-
-    @BeforeEach
-    void setUp() {
-        objectStorageLogic.bucketName = "test";
-        objectStorageLogic.anonymousFilesEnabled = false;
     }
 
     @Test
@@ -104,13 +90,7 @@ class ObjectStorageLogicS3Test {
         assertThat(ObjectStorageLogicS3.getKeyName(objectEntry, false)).isEqualTo(objectEntry.getId());
     }
 
-    /*
-    @Test
-    void createS3Configuration() {
-        assertThat(new S3Configuration().amazonS3("http://localhost:0", Boolean.TRUE, "", "", "", "test")).isNotNull();
-    }
 
-     */
 
     private ObjectEntryBo createObjectEntry() {
         byte[] data = new byte[0];
