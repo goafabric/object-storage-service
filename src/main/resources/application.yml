@@ -50,14 +50,15 @@ logging.level.org.goafabric: "INFO"
 logging.level.org.flywaydb.core: "INFO"
 logging.level.org.hibernate.SQL: "DEBUG"
 
-#Profile can be either s3 or sql
+#Profile can be either s3-object-storage or sql-object-storage
 spring.profiles.active: "sql-object-storage"
 
-#Amazon S3 configuration, optional with profile sql
+#Amazon S3 configuration, optional with profile sql-object-storage
 cloud.aws.s3.bucket.name: "objects"
+cloud.aws.s3.path-style.enabled: "true"
+cloud.aws.s3.anonymous-files.enabled: "false"
 
 cloud.aws.s3.endpoint: "http://localhost:9100"
-cloud.aws.s3.path-style.enabled: "true"
 cloud.aws.credentials.access-key: "minioadmin"
 cloud.aws.credentials.secret-key: "minioadmin"
 

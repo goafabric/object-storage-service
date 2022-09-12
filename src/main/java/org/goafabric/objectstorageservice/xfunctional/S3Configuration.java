@@ -18,7 +18,7 @@ public class S3Configuration {
     public AmazonS3 amazonS3(
             @Value("${cloud.aws.s3.endpoint}") String serviceEndpoint,
             @Value("${cloud.aws.s3.path-style.enabled}") Boolean pathStyleAccessEnabled,
-            @Value("${cloud.aws.credentials.access-key}") String accesKey,
+            @Value("${cloud.aws.credentials.access-key}") String accessKey,
             @Value("${cloud.aws.credentials.secret-key}") String secretKey,
 
             @Value("${cloud.aws.region.static:null}") String region,
@@ -29,7 +29,7 @@ public class S3Configuration {
                         serviceEndpoint, region))
                 .withPathStyleAccessEnabled(pathStyleAccessEnabled)
                 .withCredentials(new AWSStaticCredentialsProvider(
-                        new BasicAWSCredentials(accesKey, secretKey)))
+                        new BasicAWSCredentials(accessKey, secretKey)))
                 .build();
 
         if (!amazonS3.doesBucketExistV2(bucketName)) {
