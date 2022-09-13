@@ -3,6 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <properties>
+        <spring-cloud-aws.version>2.4.2</spring-cloud-aws.version>
+    </properties>
 
     <parent>
         <groupId>org.goafabric</groupId>
@@ -26,7 +29,7 @@
         <dependency>
             <groupId>io.awspring.cloud</groupId>
             <artifactId>spring-cloud-aws-context</artifactId>
-            <version>2.4.2</version>
+            <version>${spring-cloud-aws.version}</version>
         </dependency>
 
         
