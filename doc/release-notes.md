@@ -1,4 +1,6 @@
-# 1.0.3
+# 2.0.0
+
+- Parity with Spring Boot Version
 
 # 1.0.2
 - anonymous files handling enabled
