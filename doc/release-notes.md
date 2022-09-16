@@ -1,5 +1,7 @@
-# 2.0.0
+# 2.0.1
+- Object Metadata Optimisation
 
+# 2.0.0
 - Parity with Spring Boot Version
 
 # 1.0.2

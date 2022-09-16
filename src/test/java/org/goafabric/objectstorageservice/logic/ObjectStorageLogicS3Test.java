@@ -1,6 +1,7 @@
 package org.goafabric.objectstorageservice.logic;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectEntryBo;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectMetaData;
@@ -57,7 +58,7 @@ class ObjectStorageLogicS3Test {
 
     @Test
     void getObjectMetaData() {
-        when(s3Client.getObject(anyString(), anyString())).thenReturn(new S3Object());
+        when(s3Client.getObjectMetadata(anyString(), anyString())).thenReturn(new ObjectMetadata());
 
         ObjectMetaData objectMetaData = objectStorageLogic.getObjectMetaData("1");
         assertThat(objectMetaData).isNotNull();
@@ -72,12 +73,12 @@ class ObjectStorageLogicS3Test {
 
     @Test
     void map() {
-        assertThat(ObjectStorageLogicS3.map("", null, new ObjectMetaData("1", "", "", 0))).isNotNull();
+    assertThat(ObjectStorageLogicS3.map("", null, new ObjectMetaData("", "", 0))).isNotNull();
     }
 
     @Test
     void testMapS3Object() {
-        assertThat(ObjectStorageLogicS3.map(new S3Object())).isNotNull();
+        assertThat(ObjectStorageLogicS3.map(new S3Object().getObjectMetadata())).isNotNull();
     }
 
     @Test

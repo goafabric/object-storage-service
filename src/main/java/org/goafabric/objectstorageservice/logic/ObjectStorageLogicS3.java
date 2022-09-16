@@ -42,12 +42,12 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
         final S3Object s3Object = s3Client.getObject(bucketName, objectId);
         return map(objectId,
                 s3Object.getObjectContent().readAllBytes(),
-                map(s3Object));
+                map(s3Object.getObjectMetadata()));
     }
 
     @Override
     public ObjectMetaData getObjectMetaData(@NonNull String objectId) {
-        return map(s3Client.getObject(bucketName, objectId));
+        return map(s3Client.getObjectMetadata(bucketName, objectId));
     }
 
     @Override
@@ -65,12 +65,11 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
                 .build();
     }
 
-    static ObjectMetaData map(@NonNull S3Object s3Object) {
+    static ObjectMetaData map(ObjectMetadata s3ObjectMetaData) {
         return new ObjectMetaData(
-                s3Object.getKey(),
-                s3Object.getObjectMetadata().getUserMetadata().get("filename"),
-                s3Object.getObjectMetadata().getContentType(),
-                s3Object.getObjectMetadata().getContentLength());
+                s3ObjectMetaData.getUserMetadata().get("filename"),
+                s3ObjectMetaData.getContentType(),
+                s3ObjectMetaData.getContentLength());
     }
 
     static ObjectMetadata map(@NonNull ObjectEntryBo fileEntry) {
