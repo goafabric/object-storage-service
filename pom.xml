@@ -32,7 +32,6 @@
             <version>${spring-cloud-aws.version}</version>
         </dependency>
 
-        
         <!-- monitoring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
