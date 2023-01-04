@@ -1,4 +1,4 @@
-package org.goafabric.objectstorageservice.xfunctional;
+package org.goafabric.objectstorageservice.crossfunctional;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

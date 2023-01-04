@@ -1,4 +1,4 @@
-package org.goafabric.objectstorageservice.xfunctional;
+package org.goafabric.objectstorageservice.crossfunctional;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
