@@ -2,7 +2,7 @@ version: '3.7'
 services:
   postgres:
     container_name: ${_Values_root_name}-postgres
-    image: postgres:14.4
+    image: postgres:15.1
     restart: 'no'
     ports:
       - 5432:5432
@@ -12,10 +12,12 @@ services:
     networks:
       - ${_Values_root_name}-net
     environment:
-      - TZ=Europe/Berlin
-      - POSTGRES_USER=object-storage-service
-      - POSTGRES_PASSWORD=object-storage-service
-      - POSTGRES_DB=objectstorage
+      TZ: "Europe/Berlin"
+      POSTGRES_DB: "objectstorage"
+
+      #secrets
+      POSTGRES_USER: "object-storage-service"
+      POSTGRES_PASSWORD: "object-storage-service"
   s3:
     container_name: ${_Values_root_name}-s3
     command: server /data --console-address ':9001'
@@ -29,10 +31,8 @@ services:
     networks:
       - ${_Values_root_name}-net
     environment:
-      - TZ=Europe/Berlin
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=search
+      TZ: "Europe/Berlin"
+
 
 volumes:
   pgdata:

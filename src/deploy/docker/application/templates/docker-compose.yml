@@ -9,12 +9,11 @@ services:
       - "${_Values_service_port}:${_Values_service_port}"
     command: ["-Xmx${_Values_resources_requests_memory}"]
 
-#    we cannot active the healthcheck because base native images does not have curl
-#    healthcheck:
-#      test: "curl -f http://localhost:${_Values_service_port}/actuator/health || exit 1"
-#      interval: 10s
-#      timeout: 10s
-#      retries: 5
+    healthcheck:
+      test: "curl -f http://localhost:${_Values_service_port}/actuator/health || exit 1"
+      interval: 10s
+      timeout: 10s
+      retries: 5
     volumes:
       - tmp:/tmp
       - applogs:/usr/share/logs
@@ -22,43 +21,40 @@ services:
       - ${_Values_root_name}-net
     environment:
       #application
-      - TZ=Europe/Berlin
-      - server.port=${_Values_service_port}
-      - tomcat.max-threads=20
-      - security.authentication.enabled=false
-      #forwarding sub url
-      - server.forward-headers-strategy=FRAMEWORK
-      #monitoring
-      - management.endpoint.health.show-details=always
-      - management.endpoints.web.exposure.include=health,prometheus,heapdump
-      #zipkin / jaeger
-      - spring.zipkin.service.name=object-storage-service
-      - spring.zipkin.baseUrl=http://host.docker.internal:9411
-      - spring.sleuth.enabled=true
-      - spring.zipkin.enabled=true
-      #persistence
-      - spring.datasource.url=jdbc:postgresql://host.docker.internal:5432/objectstorage
-      - spring.datasource.username=object-storage-service
-      - spring.datasource.password=object-storage-service
-      - database.provisioning.goals=-import-demo-data
-      #s3
-      - spring.profiles.active=s3-object-storage
-      - cloud.aws.s3.bucket.name=objects
-      - cloud.aws.s3.endpoint=http://host.docker.internal:9100
-      - cloud.aws.s3.path-style.enabled=true
-      - cloud.aws.credentials.access-key=minioadmin
-      - cloud.aws.credentials.secret-key=minioadmin
-      #log levels
-      - logging.level.root=WARN
-      - logging.level.org.springframework=INFO
-      - logging.level.org.goafabric=DEBUG
-      - logging.level.org.flywaydb.core="INFO"
-      - logging.level.org.hibernate.SQL="INFO"
-      - logging.level.org.goafabric.personservice.persistence.audit="INFO"
-      #log file settings
-      - logging.file.max-size=10MB
-      - logging.file.name=/usr/share/logs/application.log
+      TZ: Europe/Berlin
+      server.port: "${_Values_service_port}"
+      server.tomcat.threads.max: "20"
+      server.forward-headers-strategy: FRAMEWORK
 
+      #security
+      security.authentication.enabled: "false"
+
+      #monitoring
+      management.endpoint.health.show-details: always
+      management.endpoints.web.exposure.include: "health,heapdump,circuitbreakers,prometheus"
+
+      #profile
+      spring.profiles.active: "s3-object-storage"
+
+      #persistence
+      spring.datasource.url: "jdbc:postgresql://host.docker.internal:5432/objectstorage"
+
+      #s3
+      cloud.aws.s3.bucket.name: "objects"
+      cloud.aws.s3.endpoint: "http://host.docker.internal:9100"
+      cloud.aws.s3.path-style.enabled: "true"
+
+      #secrets
+      spring.datasource.username: "object-storage-service"
+      spring.datasource.password: "object-storage-service"
+
+      cloud.aws.credentials.access-key: "minioadmin"
+      cloud.aws.credentials.secret-key: "minioadmin"
+
+      #log levels
+      logging.level.root: "WARN"
+      logging.level.org.goafabric: "INFO"
+      logging.level.org.springframework: "INFO"
 
 volumes:
     tmp:
