@@ -36,12 +36,12 @@ services:
       #profile
       spring.profiles.active: "s3-object-storage"
 
-      #persistence
-      spring.datasource.url: "jdbc:postgresql://host.docker.internal:5432/objectstorage"
+      #jdbc
+      spring.datasource.url: "jdbc:postgresql://postgres:5432/objectstorage"
 
       #s3
       cloud.aws.s3.bucket.name: "objects"
-      cloud.aws.s3.endpoint: "http://host.docker.internal:9100"
+      cloud.aws.s3.endpoint: "http://s3minio:9000"
       cloud.aws.s3.path-style.enabled: "true"
 
       #secrets
@@ -56,9 +56,48 @@ services:
       logging.level.org.goafabric: "INFO"
       logging.level.org.springframework: "INFO"
 
+  s3minio:
+    container_name: ${_Values_root_name}-s3minio
+    command: server /data --console-address ':9001'
+    image: quay.io/minio/minio:RELEASE.2023-01-25T00-19-54Z
+    restart: 'no'
+    ports:
+      - 9100:9000
+      - 9101:9001
+    volumes:
+      - miniodata:/data
+    networks:
+      - ${_Values_root_name}-net
+    environment:
+      TZ: "Europe/Berlin"
+
+  postgres:
+    container_name: ${_Values_root_name}-postgres
+    image: postgres:15.1
+    restart: 'no'
+    ports:
+      - 5432:5432
+    command: postgres -c 'shared_buffers=128MB' -c 'max_connections=30' -c 'shared_preload_libraries=pg_stat_statements'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - ${_Values_root_name}-net
+    environment:
+      TZ: "Europe/Berlin"
+      POSTGRES_DB: "objectstorage"
+
+      #secrets
+      POSTGRES_USER: "object-storage-service"
+      POSTGRES_PASSWORD: "object-storage-service"
+
 volumes:
     tmp:
     applogs:
+
+    pgdata:
+      driver: local
+    miniodata:
+      driver: local
 
 networks:
   object-storage-service-net:
