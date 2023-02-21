@@ -46,8 +46,21 @@ at org.springframework.beans.factory.aot.BeanInstanceSupplier.invokeBeanSupplier
 at org.springframework.beans.factory.aot.BeanInstanceSupplier.get(BeanInstanceSupplier.java:208) ~[na:na]
 at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.obtainInstanceFromSupplier(AbstractAutowireCapableBeanFactory.java:1225) ~[object-storage-service:6.0.4]
 ... 52 common frames omitted
-Caused by: java.lang.IllegalArgumentException: null
-at com.amazonaws.internal.config.InternalConfig.loadfrom(InternalConfig.java:260) ~[na:na]
+Caused by: java.lang.IllegalStateException: Fatal: Failed to load the internal config for AWS Java SDK
+at com.amazonaws.internal.config.InternalConfig$Factory.<clinit>(InternalConfig.java:351) ~[na:na]
+... 83 common frames omitted
+Caused by: com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Cannot construct instance of `com.amazonaws.internal.config.InternalConfigJsonHelper`: cannot deserialize from Object value (no delegate- or property-based Creator): this appears to be a native image, in which case you may need to configure reflection for the class that is to be deserialized
+at [Source: (URL); line: 2, column: 3]
+at com.fasterxml.jackson.databind.DeserializationContext.reportBadDefinition(DeserializationContext.java:1909) ~[object-storage-service:2.14.1]
+at com.fasterxml.jackson.databind.DatabindContext.reportBadDefinition(DatabindContext.java:408) ~[object-storage-service:2.14.1]
+at com.fasterxml.jackson.databind.DeserializationContext.handleMissingInstantiator(DeserializationContext.java:1349) ~[object-storage-service:2.14.1]
+at com.fasterxml.jackson.databind.deser.BeanDeserializerBase.deserializeFromObjectUsingNonDefault(BeanDeserializerBase.java:1417) ~[object-storage-service:2.14.1]
+at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserializeFromObject(BeanDeserializer.java:352) ~[object-storage-service:2.14.1]
+at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:185) ~[object-storage-service:2.14.1]
+at com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:323) ~[object-storage-service:2.14.1]
+at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4730) ~[object-storage-service:2.14.1]
+at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3608) ~[object-storage-service:2.14.1]
+at com.amazonaws.internal.config.InternalConfig.loadfrom(InternalConfig.java:261) ~[na:na]
 at com.amazonaws.internal.config.InternalConfig.load(InternalConfig.java:274) ~[na:na]
 at com.amazonaws.internal.config.InternalConfig$Factory.<clinit>(InternalConfig.java:347) ~[na:na]
 ... 83 common frames omitted
