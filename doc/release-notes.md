@@ -1,5 +1,6 @@
-# 3.0.1
-- upgrade to spring boot 3.0.1
+# 3.0.3
+- upgrade to spring boot 3.0.3
+- maven pom moved to doc/pom
 
 # 2.0.1
 - Object Metadata Optimisation
