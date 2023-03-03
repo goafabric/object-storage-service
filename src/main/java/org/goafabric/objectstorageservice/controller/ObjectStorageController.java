@@ -3,7 +3,6 @@ package org.goafabric.objectstorageservice.controller;
 import org.goafabric.objectstorageservice.logic.ObjectStorageLogic;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectEntryBo;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectMetaData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/objects", produces = MediaType.APPLICATION_JSON_VALUE)
 @Transactional
 public class ObjectStorageController {
-    @Autowired
-    ObjectStorageLogic objectStorageLogic;
+    private final ObjectStorageLogic objectStorageLogic;
+
+    public ObjectStorageController(ObjectStorageLogic objectStorageLogic) {
+        this.objectStorageLogic = objectStorageLogic;
+    }
 
     @GetMapping("/welcome")
     public String welcome() {
