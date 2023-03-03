@@ -4,7 +4,6 @@ import lombok.NonNull;
 import org.goafabric.objectstorageservice.persistence.ObjectStorageRepository;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectEntryBo;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectMetaData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -14,8 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Profile("sql-object-storage")
 @Component
 public class ObjectStorageLogicSQL implements ObjectStorageLogic {
-    @Autowired
-    ObjectStorageRepository objectStorageRepository;
+    private final ObjectStorageRepository objectStorageRepository;
+
+    public ObjectStorageLogicSQL(ObjectStorageRepository objectStorageRepository) {
+        this.objectStorageRepository = objectStorageRepository;
+    }
 
     @PostMapping(value = "/persistFile", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String persistObject(@NonNull final ObjectEntryBo fileEntry) {
