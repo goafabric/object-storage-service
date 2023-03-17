@@ -2,9 +2,6 @@ package org.goafabric.objectstorageservice.logic;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.S3Object;
-import lombok.NonNull;
-import lombok.SneakyThrows;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectEntryBo;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectMetaData;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +9,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 @Profile("s3-object-storage")
 @Component
@@ -29,8 +27,7 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
     }
 
     @Override
-    @SneakyThrows
-    public String persistObject(@NonNull ObjectEntryBo objectEntry) {
+    public String persistObject(ObjectEntryBo objectEntry) {
         s3Client.putObject(bucketName,
                 getKeyName(objectEntry, anonymousFilesEnabled),
                 new ByteArrayInputStream(objectEntry.data),
@@ -39,25 +36,28 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
     }
 
     @Override
-    @SneakyThrows
-    public ObjectEntryBo getObject(@NonNull String objectId) {
-        final S3Object s3Object = s3Client.getObject(bucketName, objectId);
-        return map(objectId,
-                s3Object.getObjectContent().readAllBytes(),
-                map(s3Object.getObjectMetadata()));
+    public ObjectEntryBo getObject(String objectId) {
+        try {
+            var s3Object = s3Client.getObject(bucketName, objectId);
+            return map(objectId,
+                    s3Object.getObjectContent().readAllBytes(),
+                    map(s3Object.getObjectMetadata()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public ObjectMetaData getObjectMetaData(@NonNull String objectId) {
+    public ObjectMetaData getObjectMetaData(String objectId) {
         return map(s3Client.getObjectMetadata(bucketName, objectId));
     }
 
     @Override
-    public void deleteObject(@NonNull String objectId) {
+    public void deleteObject(String objectId) {
         s3Client.deleteObject(bucketName, objectId);
     }
 
-    static ObjectEntryBo map(@NonNull String keyName, byte[] data, @NonNull ObjectMetaData objectMetaDataProjection)  {
+    static ObjectEntryBo map(String keyName, byte[] data, ObjectMetaData objectMetaDataProjection)  {
         return new ObjectEntryBo(
                 keyName,
                 objectMetaDataProjection.objectName(),
@@ -73,7 +73,7 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
                 s3ObjectMetaData.getContentLength());
     }
 
-    static ObjectMetadata map(@NonNull ObjectEntryBo fileEntry) {
+    static ObjectMetadata map(ObjectEntryBo fileEntry) {
         final ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(fileEntry.data.length);
         objectMetadata.setContentType(fileEntry.contentType);
@@ -81,7 +81,7 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
         return objectMetadata;
     }
 
-    static String getKeyName(@NonNull ObjectEntryBo objectEntry, Boolean anonymousFilesEnabled) {
+    static String getKeyName(ObjectEntryBo objectEntry, Boolean anonymousFilesEnabled) {
         final String[] fix = objectEntry.objectName.split("\\.");
         return (fix.length < 2 || anonymousFilesEnabled)
                         ? objectEntry.id

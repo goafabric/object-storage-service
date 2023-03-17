@@ -1,6 +1,5 @@
 package org.goafabric.objectstorageservice.logic;
 
-import lombok.NonNull;
 import org.goafabric.objectstorageservice.persistence.ObjectStorageRepository;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectEntryBo;
 import org.goafabric.objectstorageservice.persistence.domain.ObjectMetaData;
@@ -20,22 +19,22 @@ public class ObjectStorageLogicSQL implements ObjectStorageLogic {
     }
 
     @PostMapping(value = "/persistFile", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String persistObject(@NonNull final ObjectEntryBo fileEntry) {
+    public String persistObject(final ObjectEntryBo fileEntry) {
         return objectStorageRepository.save(fileEntry).id;
     }
 
     @GetMapping("/getFile/{objectId}")  //, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ObjectEntryBo getObject(@NonNull String objectId) {
+    public ObjectEntryBo getObject(String objectId) {
         return objectStorageRepository.getReferenceById(objectId);
     }
 
 
     @GetMapping("/getObjectMetaData/{objectId}")
-    public ObjectMetaData getObjectMetaData(@NonNull String objectId) {
+    public ObjectMetaData getObjectMetaData(String objectId) {
         return objectStorageRepository.findMetaDataById(objectId);
     }
 
-    public void deleteObject(@NonNull final String fileid) {
+    public void deleteObject(final String fileid) {
         objectStorageRepository.deleteById(fileid);
     }
 }
