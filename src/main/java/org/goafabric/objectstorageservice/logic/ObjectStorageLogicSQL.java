@@ -21,7 +21,7 @@ public class ObjectStorageLogicSQL implements ObjectStorageLogic {
 
     @PostMapping(value = "/persistFile", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String persistObject(@NonNull final ObjectEntryBo fileEntry) {
-        return objectStorageRepository.save(fileEntry).getId();
+        return objectStorageRepository.save(fileEntry).id;
     }
 
     @GetMapping("/getFile/{objectId}")  //, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)

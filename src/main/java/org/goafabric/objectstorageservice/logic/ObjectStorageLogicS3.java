@@ -33,7 +33,7 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
     public String persistObject(@NonNull ObjectEntryBo objectEntry) {
         s3Client.putObject(bucketName,
                 getKeyName(objectEntry, anonymousFilesEnabled),
-                new ByteArrayInputStream(objectEntry.getData()),
+                new ByteArrayInputStream(objectEntry.data),
                 map(objectEntry));
         return getKeyName(objectEntry, anonymousFilesEnabled);
     }
@@ -58,13 +58,12 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
     }
 
     static ObjectEntryBo map(@NonNull String keyName, byte[] data, @NonNull ObjectMetaData objectMetaDataProjection)  {
-        return ObjectEntryBo.builder()
-                .id(keyName)
-                .data(data)
-                .objectName(objectMetaDataProjection.getObjectName())
-                .contentType(objectMetaDataProjection.getContentType())
-                .objectSize(objectMetaDataProjection.getObjectSize())
-                .build();
+        return new ObjectEntryBo(
+                keyName,
+                objectMetaDataProjection.objectName(),
+                objectMetaDataProjection.contentType(),
+                objectMetaDataProjection.objectSize(),
+                data);
     }
 
     static ObjectMetaData map(ObjectMetadata s3ObjectMetaData) {
@@ -76,17 +75,17 @@ public class ObjectStorageLogicS3 implements ObjectStorageLogic {
 
     static ObjectMetadata map(@NonNull ObjectEntryBo fileEntry) {
         final ObjectMetadata objectMetadata = new ObjectMetadata();
-        objectMetadata.setContentLength(fileEntry.getData().length);
-        objectMetadata.setContentType(fileEntry.getContentType());
-        objectMetadata.addUserMetadata("filename", fileEntry.getObjectName());
+        objectMetadata.setContentLength(fileEntry.data.length);
+        objectMetadata.setContentType(fileEntry.contentType);
+        objectMetadata.addUserMetadata("filename", fileEntry.objectName);
         return objectMetadata;
     }
 
     static String getKeyName(@NonNull ObjectEntryBo objectEntry, Boolean anonymousFilesEnabled) {
-        final String[] fix = objectEntry.getObjectName().split("\\.");
+        final String[] fix = objectEntry.objectName.split("\\.");
         return (fix.length < 2 || anonymousFilesEnabled)
-                        ? objectEntry.getId()
-                        : (fix[0] + "_" + objectEntry.getId() + "." + fix[1]);
+                        ? objectEntry.id
+                        : (fix[0] + "_" + objectEntry.id + "." + fix[1]);
     }
 
 }

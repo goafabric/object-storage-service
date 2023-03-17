@@ -1,10 +1,7 @@
 package org.goafabric.objectstorageservice.persistence.domain;
 
-import lombok.*;
-
-@Value
-public class ObjectMetaData {
-    private String objectName;
-    private String contentType;
-    private long objectSize;
-}
+public record ObjectMetaData (
+    String objectName,
+    String contentType,
+    long objectSize
+) {}

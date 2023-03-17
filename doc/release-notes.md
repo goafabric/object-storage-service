@@ -1,6 +1,7 @@
 # 3.0.3
-- upgrade to spring boot 3.0.3
-- maven pom moved to doc/pom
+- upgrade to spring boot 3.0.4
+- maven pom moved to doc/pom in favour of gradle
+- kicked lombok in favour of records
 
 # 2.0.1
 - Object Metadata Optimisation

@@ -4,32 +4,32 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "object_entry")
 public class ObjectEntryBo {
+    public ObjectEntryBo(String id, String objectName, String contentType, long objectSize, byte[] data) {
+        this.id = id;
+        this.objectName = objectName;
+        this.contentType = contentType;
+        this.objectSize = objectSize;
+        this.data = data;
+    }
+    ObjectEntryBo() {}
+
     @Id
-    //@GeneratedValue(generator = "uuid") @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id;
+    public String id;
 
     @Column(name = "object_name", nullable = false, length = 128)
-    private String objectName;
+    public String objectName;
 
     @Column(name = "content_type", nullable = false, length = 128)
-    private String contentType;
+    public String contentType;
 
     @Column(name = "object_size", nullable = false)
-    private long objectSize;
+    public long objectSize;
 
     @Column(name = "data", nullable = false)
-    private byte[] data;
+    public byte[] data;
 }

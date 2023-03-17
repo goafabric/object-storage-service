@@ -37,26 +37,26 @@ class ObjectStorageControllerIT {
         final String pathSource = ResourceUtils.getURL("classpath:testfiles") + "/";
         final byte[] data = Files.readAllBytes(ResourceUtils.getFile(pathSource + "lorem_ipsum.pdf").toPath());
 
-        ObjectEntryBo objectEntry = ObjectEntryBo.builder()
-                .id(UUID.randomUUID().toString())
-                .data(data)
-                        .objectName("lorem_ipsum.pdf")
-                        .objectSize(data.length)
-                        .contentType(MediaType.APPLICATION_PDF_VALUE)
-                .build();
+        ObjectEntryBo objectEntry = new ObjectEntryBo(
+                UUID.randomUUID().toString(),
+                "lorem_ipsum.pdf",
+                MediaType.APPLICATION_PDF_VALUE,
+                data.length,
+                data
+        );
 
         final String id = objectStorageController.persistObject(objectEntry);
         assertThat(id).isNotNull();
 
-        final byte[] objectData = objectStorageController.getObject(id).getData();
+        final byte[] objectData = objectStorageController.getObject(id).data;
         assertThat(objectData).isNotNull();
         assertThat(objectData).hasSizeGreaterThan(1);
 
         final ObjectMetaData objectMetaData = objectStorageController.getObjectMetaData(id);
         assertThat(objectMetaData).isNotNull();
-        assertThat(objectMetaData.getObjectSize()).isEqualTo(data.length);
-        assertThat(objectMetaData.getContentType()).isEqualTo(MediaType.APPLICATION_PDF_VALUE);
-        assertThat(objectMetaData.getObjectName()).isEqualTo("lorem_ipsum.pdf");
+        assertThat(objectMetaData.objectSize()).isEqualTo(data.length);
+        assertThat(objectMetaData.contentType()).isEqualTo(MediaType.APPLICATION_PDF_VALUE);
+        assertThat(objectMetaData.objectName()).isEqualTo("lorem_ipsum.pdf");
 
         //fileStorageController.deleteFile(id);
     }

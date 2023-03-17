@@ -38,7 +38,7 @@ class ObjectStorageLogicS3Test {
 
         final ObjectEntryBo objectEntry = objectStorageLogic.getObject("1");
         assertThat(objectEntry).isNotNull();
-        assertThat(objectEntry.getId()).isNotNull();
+        assertThat(objectEntry.id).isNotNull();
     }
 
     @Test
@@ -78,16 +78,16 @@ class ObjectStorageLogicS3Test {
             .startsWith("lorem_ipsum");
 
         assertThat(ObjectStorageLogicS3.getKeyName(objectEntry, true))
-                .isEqualTo(objectEntry.getId());
+                .isEqualTo(objectEntry.id);
     }
 
 
     @Test
     void getKeyNameWithOutExt() {
         ObjectEntryBo objectEntry = createObjectEntry();
-        objectEntry.setObjectName("anotherfile_without_extension");
+        objectEntry.objectName = ("anotherfile_without_extension");
 
-        assertThat(ObjectStorageLogicS3.getKeyName(objectEntry, false)).isEqualTo(objectEntry.getId());
+        assertThat(ObjectStorageLogicS3.getKeyName(objectEntry, false)).isEqualTo(objectEntry.id);
     }
 
     /*
@@ -100,12 +100,12 @@ class ObjectStorageLogicS3Test {
 
     private ObjectEntryBo createObjectEntry() {
         byte[] data = new byte[0];
-        return ObjectEntryBo.builder()
-                .id(UUID.randomUUID().toString())
-                .data(data)
-                .objectName("lorem_ipsum.pdf")
-                .objectSize(data.length)
-                .contentType(MediaType.APPLICATION_PDF_VALUE)
-                .build();
+        return new ObjectEntryBo(
+            UUID.randomUUID().toString(),
+                "lorem_ipsum.pdf",
+                MediaType.APPLICATION_PDF_VALUE,
+                data.length,
+                data
+        );
     }
 }
