@@ -1,5 +1,5 @@
-# 3.0.3
-- upgrade to spring boot 3.0.4
+# 3.0.5
+- upgrade to spring boot 3.0.5
 - maven pom moved to doc/pom in favour of gradle
 - kicked lombok in favour of records
 
